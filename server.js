@@ -3,6 +3,7 @@ import axios from 'axios'
 import _ from 'lodash'
 
 let entitiesGlobal = []
+let newsTips = []
 
 const actions = {
   say(sessionId, context, message, cb) {
@@ -10,7 +11,7 @@ const actions = {
     cb();
   },
   merge(sessionId, context, entities, message, cb) {
-    entitiesGlobal[sessionId] = entities
+    entitiesGlobal[sessionId] = _.assign({}, entitiesGlobal[sessionId], entities)
     cb(context);
   },
   error(sessionId, context, err) {
@@ -32,7 +33,23 @@ const actions = {
       .catch(response => {
         console.log(response)
       })
+  },
+  sendNewsTip(sessionId, context, cb) {
+    newsTips.push(entitiesGlobal[sessionId].news_tip[0].value);
+    cb();
   }
+};
+
+const firstEntityValue = (entities, entity) => {
+  const val = entities && entities[entity] &&
+          Array.isArray(entities[entity]) &&
+          entities[entity].length > 0 &&
+          entities[entity][0].value
+      ;
+  if (!val) {
+    return null;
+  }
+  return typeof val === 'object' ? val.value : val;
 };
 
 const client = new Wit('TGTM7ZQAJRZLVNGS5WU7MERPJUSRDZET', actions);
