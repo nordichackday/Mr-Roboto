@@ -55,7 +55,6 @@ const actions = {
     }
   },
   sendNewsTip(sessionId, context, cb) {
-    console.log(getEntities(sessionId))
     newsTips.push(getEntities(sessionId).news_tip[0].value);
     cb();
   }
@@ -64,7 +63,6 @@ const actions = {
 const client = new Wit('TGTM7ZQAJRZLVNGS5WU7MERPJUSRDZET', actions);
 
 controller.on(['direct_mention', 'direct_message'], function(bot, message) {
-  console.log(message)
   const context1 = {}
   sessionsGlobal[message.user + message.channel || ''] = message
   client.runActions(message.user + message.channel || '', message.text, context1, (e, context2) => {
@@ -79,3 +77,13 @@ controller.on(['direct_mention', 'direct_message'], function(bot, message) {
 function getEntities(sessionId) {
   return entitiesGlobal[sessionId] || {}
 }
+
+const app = express()
+
+app.get('/', function (req, res) {
+  res.send('<h1>News Tips</h1>' + _.map(newsTips, newsTip => `<h2>${newsTips}</h2>`).join(''));
+});
+
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
+});
