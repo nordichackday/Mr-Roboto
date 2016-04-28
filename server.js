@@ -49,7 +49,7 @@ const actions = {
           const title = response.data.data[0].title
           const summary = response.data.data[0].summary
 
-          context.topNewsByTag = image+'\n*'+url+'\n'+title+'*\n'+summary
+          context.topNewsByTag = image+'\n'+url+'\n*'+title+'*\n'+summary
           cb(context)
         })
         .catch(response => {
