@@ -1,4 +1,6 @@
 import { Wit } from 'node-wit'
+import axios from 'axios'
+import _ from 'lodash'
 
 const actions = {
   say(sessionId, context, message, cb) {
@@ -11,14 +13,12 @@ const actions = {
   error(sessionId, context, err) {
     console.log(err.message);
   },
-  getWeather(sessionId, context, cb) {
-    console.log('getWeather')
-    context.weather = 'Sunny'
-    cb(context)
-  },
   getTopNews(sessionId, context, cb) {
-    context.topNews = 'news'
-    cb(context)
+    axios.get('https://www.dr.dk/tjenester/mimer/api/v2/articles/latest.json?limit=1')
+      .then(response => {
+        context.topNews = response.data.data[0].title
+        cb(context)
+      })
   }
 };
 
