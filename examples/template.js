@@ -4,13 +4,13 @@
 // const Wit = require('node-wit').Wit;
 const Wit = require('../').Wit;
 
-const token = (() => {
-  if (process.argv.length !== 3) {
-    console.log('usage: node examples/template.js <wit-token>');
-    process.exit(1);
-  }
-  return process.argv[2];
-})();
+// const token = (() => {
+//   if (process.argv.length !== 3) {
+//     console.log('usage: node examples/template.js <wit-token>');
+//     process.exit(1);
+//   }
+//   return process.argv[2];
+// })();
 
 const actions = {
   say(sessionId, context, message, cb) {
@@ -25,5 +25,5 @@ const actions = {
   },
 };
 
-const client = new Wit(token, actions);
+const client = new Wit('4PJSSXMVCQZGHPG6ADVZMEVTNJ4DIKCJ', actions);
 client.interactive();
