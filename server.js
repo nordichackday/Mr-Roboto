@@ -23,5 +23,5 @@ const actions = {
   }
 };
 
-const client = new Wit('4PJSSXMVCQZGHPG6ADVZMEVTNJ4DIKCJ', actions);
+const client = new Wit('TGTM7ZQAJRZLVNGS5WU7MERPJUSRDZET', actions);
 client.interactive();
