@@ -76,7 +76,7 @@ function mapNews(newsItem) {
   const title = newsItem.title
   const summary = newsItem.summary
 
-  return image+'\n*<'+url+'|'+title+'>*\n'+summary
+  return image+'\n'+url+'\n*'+title+'*\n'+summary
 }
 
 const client = new Wit('TGTM7ZQAJRZLVNGS5WU7MERPJUSRDZET', actions)
