@@ -2,13 +2,14 @@ import Botkit from 'botkit'
 import { Wit } from 'node-wit'
 import axios from 'axios'
 import _ from 'lodash'
+import express from 'express'
 
 var controller = Botkit.slackbot({
     debug: true,
 });
 
 var bot = controller.spawn({
-    token: 'xoxb-38606867408-PmyVviEk9zqZpu9S06VO1bnx'
+    token: process.env.SLACK_TOKEN
 }).startRTM();
 
 const entitiesGlobal = []
