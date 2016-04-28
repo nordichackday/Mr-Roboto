@@ -43,7 +43,12 @@ const actions = {
     if(!_.isUndefined(getEntities(sessionId).news_category)) {
       axios.get('https://www.dr.dk/tjenester/mimer/api/v2/articles/latest.json?limit=1&tags[]=' + entitiesGlobal[sessionId].news_category[0].value)
         .then(response => {
-          context.topNewsByTag = response.data.data[0].title
+          image = response.data.data[0].images[0].url
+          url = response.data.data[0].url
+          title = response.data.data[0].title
+          summary = response.data.data[0].summary
+
+          context.topNewsByTag = image+'\n*'+url+title+'*\n'+summary
           cb(context)
         })
         .catch(response => {
