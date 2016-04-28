@@ -11,6 +11,16 @@ const actions = {
   error(sessionId, context, err) {
     console.log(err.message);
   },
+  getWeather(sessionId, context, cb) {
+    console.log('getWeather')
+    context.weather = 'Sunny'
+    cb(context)
+  },
+  getNews(sessionId, context, cb) {
+    console.log('getNews')
+    context.news = 'news'
+    cb(context)
+  }
 };
 
 const client = new Wit('4PJSSXMVCQZGHPG6ADVZMEVTNJ4DIKCJ', actions);
