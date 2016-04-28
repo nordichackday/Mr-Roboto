@@ -16,9 +16,8 @@ const actions = {
     context.weather = 'Sunny'
     cb(context)
   },
-  getNews(sessionId, context, cb) {
-    console.log('getNews')
-    context.news = 'news'
+  getTopNews(sessionId, context, cb) {
+    context.topNews = 'news'
     cb(context)
   }
 };
