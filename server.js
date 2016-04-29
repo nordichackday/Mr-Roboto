@@ -37,9 +37,11 @@ const actions = {
       })
       .catch(response => {
         console.trace(response)
+        cb(context)
       })
   },
   getTopNewsByTag(sessionId, context, cb) {
+    if(!_.isUndefined(context.news_category)) {
       axios.get('https://www.dr.dk/tjenester/mimer/api/v2/articles/latest.json?limit=3&tags[]=' + context.news_category[0].value)
         .then(response => {
           context.topNewsByTag = _.map(response.data.data, mapNews).join('\n')
@@ -47,36 +49,68 @@ const actions = {
         })
         .catch(response => {
           console.trace(response)
+          cb(context)
         })
+    } else {
+      cb({})
+    }
+  },
+  getProgramsByName(sessionId, context, cb) {
+    if(!_.isUndefined(context.program_name)) {
+      axios.get('http://www.dr.dk/mu-online/api/1.3/page/tv/programs-search/' + context.program_name[0].value)
+        .then(response => {
+          if(response.data.Programs.Items.length) {
+            context.programsByName = _.map(response.data.Programs.Items, mapProgram).join('\n')
+          } else {
+            context.programByName = 'Jeg kunne ikke finde programmet'
+          }
+          cb(context)
+        })
+        .catch(response => {
+          console.trace(response)
+          cb(context)
+        })
+    } else {
+      cb({})
+    }
   },
   sendNewsTip(sessionId, context, cb) {
-    newsTips.push(context.news_tip[0].value)
-    cb()
+    if(!_.isUndefined(context.news_tip)) {
+      newsTips.push(context.news_tip[0].value)
+    }
+    cb(context)
   },
   deleteTopNewsByTag(sessionId, context, cb) {
-    delete context.topNewsByTag
-    cb(context)
+    cb({})
   },
   deleteNewsTip(sessionId, context, cb) {
-    delete context.newsTip
-    cb(context)
+    cb({})
   },
   deleteTopNews(sessionId, context, cb) {
-    delete context.topNews
-    cb(context)
+    cb({})
+  },
+  deleteProgramsByName(sessionId, context, cb) {
+    cb({})
   }
 }
 
-function mapNews(newsItem) {
+function mapNews(news) {
   let image = ''
-  if(newsItem.images.length) {
-    image = newsItem.images[0].url
+  if(news.images.length) {
+    image = news.images[0].url
   }
-  const url = newsItem.url
-  const title = newsItem.title
-  const summary = newsItem.summary
+  const url = news.url
+  const title = news.title
+  const summary = news.summary
 
   return image+'\n'+url+'\n*'+title+'*\n'+summary
+}
+
+function mapProgram(program) {
+  const url = `https://www.dr.dk/tv/se/${program.SeriesSlug}/${program.Slug}`
+  const title = program.Title
+
+  return url+'\n*'+title
 }
 
 const client = new Wit('TGTM7ZQAJRZLVNGS5WU7MERPJUSRDZET', actions)
@@ -98,7 +132,7 @@ controller.on(['direct_mention', 'direct_message'], function(bot, message) {
 const app = express()
 
 app.get('/', function (req, res) {
-  res.send('<h1>News Tips</h1>' + _.map(newsTips, newsTip => `<h2>${newsTips}</h2>`).join(''))
+  res.send(`<div style="font-family: sans-serif; width: 600px; margin: 50px auto"><h1>News Tips</h1><hr />` + _.map(newsTips, newsTip => `<h2>${newsTips}</h2>`).join('') + '</div>')
 })
 
 app.listen(3000, function () {
